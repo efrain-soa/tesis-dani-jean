@@ -17,6 +17,8 @@
 */
 import React from "react";
 
+import { Redirect, useHistory } from "react-router-dom";
+
 // reactstrap components
 import {
   Button,
@@ -33,6 +35,19 @@ import {
 } from "reactstrap";
 
 function UserProfile() {
+  const test = { tag: "data" };
+
+  const history = useHistory();
+
+  const handleRoute = () => {
+    history.push({
+      pathname: "/login",
+      state: {
+        // location state
+        test: test,
+      },
+    });
+  };
   return (
     <>
       <div className="content">
@@ -155,7 +170,12 @@ function UserProfile() {
                 </Form>
               </CardBody>
               <CardFooter>
-                <Button className="btn-fill" color="primary" type="submit">
+                <Button
+                  className="btn-fill"
+                  color="primary"
+                  type="submit"
+                  onClick={handleRoute}
+                >
                   Save
                 </Button>
               </CardFooter>
@@ -171,11 +191,6 @@ function UserProfile() {
                   <div className="block block-three" />
                   <div className="block block-four" />
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar"
-                      src={require("assets/img/emilyz.jpg").default}
-                    />
                     <h5 className="title">Mike Andrew</h5>
                   </a>
                   <p className="description">Ceo/Co-Founder</p>

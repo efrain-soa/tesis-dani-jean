@@ -30,9 +30,8 @@ import PerfectScrollbar from "perfect-scrollbar";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import routes from "routes.js";
+import routes from "routescli.js";
 
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
@@ -40,16 +39,22 @@ import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 var ps;
 
 //NOTA : hacer logica para el login y crear un rol admin
-function Admin() {
+function Cliente() {
   const history = useHistory();
-
+  var routesFinal = [];
   React.useEffect(() => {
+    routes.map((prop, key) => {
+      if (prop.layout == "/cliente") {
+        routesFinal.push(prop);
+      }
+    });
     const usuario = JSON.parse(localStorage.getItem("usuario"));
-    console.log(usuario);
+
     if (usuario === null) {
       history.push({
         pathname: "/login",
       });
+    } else {
     }
   }, []);
 
@@ -99,7 +104,7 @@ function Admin() {
   };
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/cliente") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -142,19 +147,14 @@ function Admin() {
               />
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="*" to="/admin/dashboard" />
+                <Redirect from="*" to="/cliente/formulario" />
               </Switch>
-              {
-                // we don't want the Footer to be rendered on map page
-                location.pathname === "/admin/maps" ? null : <Footer fluid />
-              }
             </div>
           </div>
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>
   );
 }
 
-export default Admin;
+export default Cliente;

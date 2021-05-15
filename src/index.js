@@ -21,7 +21,11 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AdminLayout from "layouts/Admin/Admin.js";
 import RTLLayout from "layouts/RTL/RTL.js";
+import Login from "layouts/General/General.js";
+import Cliente from "layouts/Cliente/Cliente.js";
+import Register from "layouts/General/Register";
 
+import Recomendacion from "views/Recomendacion";
 import "assets/scss/black-dashboard-react.scss";
 import "assets/demo/demo.css";
 import "assets/css/nucleo-icons.css";
@@ -35,9 +39,16 @@ ReactDOM.render(
     <BackgroundColorWrapper>
       <BrowserRouter>
         <Switch>
-          <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+          <Route path="/login" render={(props) => <Login {...props} />} />
+          <Route path="/register" render={(props) => <Register {...props} />} />
+          <Route path="/cliente" render={(props) => <Cliente {...props} />} />
+          <Route
+            path="/recomendacion"
+            render={(props) => <Recomendacion {...props} />}
+          />
+          <Route path="/admin" component={AdminLayout} />
           <Route path="/rtl" render={(props) => <RTLLayout {...props} />} />
-          <Redirect from="/" to="/admin/dashboard" />
+          <Redirect from="/" to="/login" />
         </Switch>
       </BrowserRouter>
     </BackgroundColorWrapper>

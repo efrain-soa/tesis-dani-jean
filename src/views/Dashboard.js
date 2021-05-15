@@ -20,7 +20,7 @@ import React from "react";
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
-
+import Test from "./Test";
 // reactstrap components
 import {
   Button,
@@ -55,6 +55,7 @@ function Dashboard(props) {
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+  console.log(sessionStorage.getItem("usuario"));
   return (
     <>
       <div className="content">
@@ -129,10 +130,7 @@ function Dashboard(props) {
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
-                  <Line
-                    data={chartExample1[bigChartData]}
-                    options={chartExample1.options}
-                  />
+                  <Test bigChartData={bigChartData} />
                 </div>
               </CardBody>
             </Card>
