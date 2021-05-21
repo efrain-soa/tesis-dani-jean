@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useLocation, useHistory } from "react-router-dom";
 import {
   Button,
@@ -22,19 +24,6 @@ const Register = () => {
 
   //console.log(location.state.test);
 
-  const [datos, setDatos] = useState({
-    nombre: "",
-    apellidos: "",
-    usernam: "",
-    password: "",
-    email: "",
-  });
-  const handleInputChange = (event) => {
-    setDatos({
-      ...datos,
-      [event.target.name]: event.target.value,
-    });
-  };
   const history = useHistory();
 
   const newuser = {
@@ -46,38 +35,64 @@ const Register = () => {
     rol: "CLIENTE",
   };
 
-  const autenticarse = async () => {
-    newuser.nombre = datos.nombre;
-    newuser.apellidos = datos.apellidos;
-    newuser.username = datos.usernam;
-    newuser.email = datos.email;
-    newuser.hashPassword = datos.password;
+  // validación y leer los datos del formulario
+  const formik = useFormik({
+    initialValues: {
+      usernam: "",
+      password: "",
+      nombres: "",
+      apellidos: "",
+      email: "",
+    },
+    validationSchema: Yup.object({
+      usernam: Yup.string()
+        .min(8, "Username debe ser minimo 8 caracteres ")
+        .required("Debe ingresar un usuario"),
+      password: Yup.string()
+        .min(8, "Password debe ser minimo 8 caracteres.")
+        .required("Debe ingresar un password"),
+      nombres: Yup.string()
+        .min(10, "Ingrese un nombre válido")
+        .required("Debe ingresar un nombre"),
+      apellidos: Yup.string()
+        .min(10, "Ingrese apellidos válido")
+        .required("Debe ingresar sus apellidos"),
+      email: Yup.string()
+        .email("Ingrese un formato email válido")
+        .required("Debe ingresar un email"),
+    }),
+    onSubmit: async (userform) => {
+      newuser.nombre = userform.nombres;
+      newuser.apellidos = userform.apellidos;
+      newuser.username = userform.usernam;
+      newuser.email = userform.email;
+      newuser.hashPassword = userform.password;
 
-    console.log(newuser);
+      console.log(newuser);
 
-    try {
-      const userCreate = await axios.post(
-        "http://api-rest-machine-usuarios.herokuapp.com/api/usuarios/crear",
-        newuser
-      );
-
-      console.log(userCreate.data);
-
-      if (userCreate.data.status == "201") {
-        localStorage.setItem(
-          "usuario",
-          JSON.stringify(userCreate.data.usuario)
+      try {
+        const userCreate = await axios.post(
+          "http://api-rest-machine-usuarios.herokuapp.com/api/usuarios/crear",
+          newuser
         );
-        history.push({
-          pathname: "/admin/dashboard",
-        });
-      }
-    } catch (error) {
-      console.log(error.response);
-    }
 
-    /**  */
-  };
+        console.log(userCreate.data);
+
+        if (userCreate.data.status == "201") {
+          localStorage.setItem(
+            "usuario",
+            JSON.stringify(userCreate.data.usuario)
+          );
+          history.push({
+            pathname: "/cliente/formulario",
+          });
+        }
+      } catch (error) {
+        console.log(error.response);
+      }
+    },
+  });
+
   return (
     <BackgroundColorContext.Consumer>
       {({ color, changeColor }) => (
@@ -92,117 +107,160 @@ const Register = () => {
             <Row>
               <Col md="12">
                 <Card className="card-user">
-                  <CardBody>
-                    <CardText />
-                    <div className="author">
-                      <div className="block block-one" />
-                      <div className="block block-two" />
-                      <div className="block block-three" />
-                      <div className="block block-four" />
+                  <form onSubmit={formik.handleSubmit}>
+                    <CardBody>
+                      <CardText />
+                      <div className="author">
+                        <div className="block block-one" />
+                        <div className="block block-two" />
+                        <div className="block block-three" />
+                        <div className="block block-four" />
 
-                      <h1 className="title">Registrate</h1>
+                        <h1 className="title">Registrate</h1>
 
-                      <p className="description">
-                        Pronto podrás saber lo que necesita tu auto :)
-                      </p>
-                    </div>
-                    <div className="card-description">
-                      <Col className="px-md-1" md="12">
-                        <FormGroup>
+                        <p className="description">
+                          Pronto podrás saber lo que necesita tu auto :)
+                        </p>
+                      </div>
+                      <div className="card-description">
+                        <Col className="px-md-1" md="12">
                           <label>Nombres</label>
                           <Input
                             placeholder="Nombres"
                             type="text"
-                            name="nombre"
-                            onChange={handleInputChange}
+                            id="nombres"
+                            name="nombres"
+                            value={formik.values.nombres}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col className="px-md-1" md="12">
-                        <FormGroup>
+                          {formik.touched.nombres && formik.errors.nombres ? (
+                            <div role="alert">
+                              <p className="text-danger">
+                                {formik.errors.nombres}{" "}
+                              </p>
+                            </div>
+                          ) : null}
+                        </Col>
+                        <Col className="px-md-1" md="12">
                           <label>Apellidos</label>
                           <Input
                             placeholder="Apellidos"
                             type="text"
+                            id="apellidos"
                             name="apellidos"
-                            onChange={handleInputChange}
+                            value={formik.values.apellidos}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col className="px-md-1" md="12">
-                        <FormGroup>
+                          {formik.touched.apellidos &&
+                          formik.errors.apellidos ? (
+                            <div role="alert">
+                              <p className="text-danger">
+                                {formik.errors.apellidos}{" "}
+                              </p>
+                            </div>
+                          ) : null}
+                        </Col>
+                        <Col className="px-md-1" md="12">
                           <label>Username</label>
                           <Input
                             placeholder="Username"
                             type="text"
+                            id="usernam"
                             name="usernam"
-                            onChange={handleInputChange}
+                            value={formik.values.usernam}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col className="px-md-1" md="12">
-                        <FormGroup>
+                          {formik.touched.usernam && formik.errors.usernam ? (
+                            <div role="alert">
+                              <p className="text-danger">
+                                {formik.errors.usernam}{" "}
+                              </p>
+                            </div>
+                          ) : null}
+                        </Col>
+                        <Col className="px-md-1" md="12">
                           <label>Email</label>
                           <Input
                             placeholder="Emal"
                             type="mail"
+                            id="email"
                             name="email"
-                            onChange={handleInputChange}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col className="px-md-1" md="12">
-                        <FormGroup>
+                          {formik.touched.email && formik.errors.email ? (
+                            <div role="alert">
+                              <p className="text-danger">
+                                {formik.errors.email}{" "}
+                              </p>
+                            </div>
+                          ) : null}
+                        </Col>
+                        <Col className="px-md-1" md="12">
                           <label>Password</label>
                           <Input
                             placeholder="Password"
                             type="password"
+                            id="password"
                             name="password"
-                            onChange={handleInputChange}
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                        </FormGroup>
-                      </Col>
-                    </div>
-                  </CardBody>
-                  <CardFooter>
-                    <div className="button-container">
-                      <Row>
-                        <Col md="12">
-                          <Button
-                            size="lg"
-                            block
-                            className="btn-fill"
-                            color="primary"
-                            onClick={autenticarse}
-                          >
-                            Regístrate
-                          </Button>
+                          {formik.touched.password && formik.errors.password ? (
+                            <div role="alert">
+                              <p className="text-danger">
+                                {formik.errors.password}{" "}
+                              </p>
+                            </div>
+                          ) : null}
                         </Col>
-                      </Row>
-                      <Row>
-                        <Col md="12">
-                          <Button
-                            size="lg"
-                            block
-                            className="btn-fill"
-                            outline
-                            color="secondary"
-                          >
-                            Atrás
-                          </Button>
-                        </Col>
-                      </Row>
-                      <Button className="btn-icon btn-round" color="facebook">
-                        <i className="fab fa-facebook" />
-                      </Button>
-                      <Button className="btn-icon btn-round" color="twitter">
-                        <i className="fab fa-twitter" />
-                      </Button>
-                      <Button className="btn-icon btn-round" color="google">
-                        <i className="fab fa-google-plus" />
-                      </Button>
-                    </div>
-                  </CardFooter>
+                      </div>
+                    </CardBody>
+                    <CardFooter>
+                      <div className="button-container">
+                        <Row>
+                          <Col md="12">
+                            <Button
+                              size="lg"
+                              block
+                              className="btn-fill"
+                              color="primary"
+                              type="submit"
+                            >
+                              Regístrate
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="12">
+                            <Button
+                              size="lg"
+                              block
+                              className="btn-fill"
+                              outline
+                              color="secondary"
+                            >
+                              Atrás
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Button className="btn-icon btn-round" color="facebook">
+                          <i className="fab fa-facebook" />
+                        </Button>
+                        <Button className="btn-icon btn-round" color="twitter">
+                          <i className="fab fa-twitter" />
+                        </Button>
+                        <Button className="btn-icon btn-round" color="google">
+                          <i className="fab fa-google-plus" />
+                        </Button>
+                      </div>
+                    </CardFooter>
+                  </form>
                 </Card>
               </Col>
             </Row>

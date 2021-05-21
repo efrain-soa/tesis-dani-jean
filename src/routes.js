@@ -42,8 +42,8 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/map",
-    name: "Map",
+    path: "/citas",
+    name: "Citas",
     rtlName: "خرائط",
     icon: "tim-icons icon-pin",
     component: Map,

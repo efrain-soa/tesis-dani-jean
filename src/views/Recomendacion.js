@@ -1,25 +1,38 @@
-import React, { useState } from "react";
-import { Route, useHistory, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, useHistory, useLocation, Link } from "react-router-dom";
 
 import cambioFiltroAire from "../assets/img/cambio de filtro de aire.png";
 import cambioPastillasFreno from "../assets/img/Cambio de pastillas de freno.png";
 import mantenimientoGeneral from "../assets/img/Mantenimiento General.png";
 import cambioAceite from "../assets/img/Cambio de aceite.png";
 
+import TimePicker from "react-time-picker";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
 import axios from "axios";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
+import ReactLoading from "react-loading";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
+import { differenceInCalendarDays } from "date-fns";
 
 import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routescli.js";
 import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Container,
   Button,
   Card,
   CardBody,
+  Alert,
   CardFooter,
   CardText,
   Row,
@@ -31,11 +44,62 @@ import {
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
-import {} from "reactstrap";
 var ps;
 
 function Recomendacion() {
   const location = useLocation();
+
+  const [value, onChange] = useState(new Date());
+  const [valueHour, onChangeHour] = useState(new Date());
+
+  const [modal, setModal] = useState(false);
+  const [nestedModal, setNestedModal] = useState(false);
+  const [closeAll, setCloseAll] = useState(false);
+  const [stateSpinner, setStateSpinner] = useState(false);
+  const [stateMensaje, setStateMensaje] = useState(false);
+  const [hiddenButton, sethiddenButton] = useState(false);
+
+  const toggle = () => {
+    setModal(!modal);
+  };
+
+  const toggleNested = () => {
+    setNestedModal(!nestedModal);
+    setCloseAll(false);
+  };
+  const toggleAll = async () => {
+    sethiddenButton(true);
+    setStateSpinner(true);
+
+    const registrarCitaRequest = {};
+
+    registrarCitaRequest.usuario = location.usuario;
+    registrarCitaRequest.recomendacion = rcmd;
+    registrarCitaRequest.fecha = value.toLocaleDateString();
+    registrarCitaRequest.hora = valueHour.toLocaleTimeString();
+    registrarCitaRequest.lista_sintomas = location.datos.lista_sitomas;
+    registrarCitaRequest.vehiculo = location.datos.vehiculo;
+    registrarCitaRequest.estado = true;
+    console.log(registrarCitaRequest);
+
+    try {
+      const recomendacionResponse = await axios.post(
+        "http://localhost:8080/api/citas/registrarcita",
+        registrarCitaRequest
+      );
+
+      setStateSpinner(false);
+      setStateMensaje(true);
+
+      setTimeout(() => {
+        console.log(recomendacionResponse.data);
+        setNestedModal(!nestedModal);
+        setCloseAll(true);
+      }, 1500);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function Servicios(props) {
     if (props.servicio == "Mantenimiento general") {
@@ -63,7 +127,12 @@ function Recomendacion() {
                   <li>Proporciona tranquilidad</li>
                 </ol>
               </CardText>
-              <Button>Volver</Button>
+              <Link to="/cliente/formulario">
+                <Button>Volver</Button>
+              </Link>
+              <Button className="btn-fill" color="primary" onClick={toggle}>
+                Registrar una Cita
+              </Button>
             </CardBody>
           </Card>
         </div>
@@ -88,7 +157,12 @@ function Recomendacion() {
                 mayor distancia de frenado, reduciendo así nuestra seguridad y
                 eficacia al momento de frenar.
               </CardText>
-              <Button>Volver</Button>
+              <Link to="/cliente/formulario">
+                <Button>Volver</Button>
+              </Link>
+              <Button className="btn-fill" color="primary" onClick={toggle}>
+                Registrar una Cita
+              </Button>
             </CardBody>
           </Card>
         </div>
@@ -112,7 +186,12 @@ function Recomendacion() {
                 que permite mejorar lubricación. Al circular por el interior del
                 motor, el aceite reduce la fricción entre las piezas metálicas
               </CardText>
-              <Button>Volver</Button>
+              <Link to="/cliente/formulario">
+                <Button>Volver</Button>
+              </Link>
+              <Button className="btn-fill" color="primary" onClick={toggle}>
+                Registrar una Cita
+              </Button>
             </CardBody>
           </Card>
         </div>
@@ -137,7 +216,12 @@ function Recomendacion() {
                 polen y bacterias del exterior sobre todo cuando nos encontramos
                 en la ciudad.
               </CardText>
-              <Button>Volver</Button>
+              <Link to="/cliente/formulario">
+                <Button>Volver</Button>
+              </Link>
+              <Button className="btn-fill" color="primary" onClick={toggle}>
+                Registrar una Cita
+              </Button>
             </CardBody>
           </Card>
         </div>
@@ -148,13 +232,29 @@ function Recomendacion() {
   }
 
   const { placa, modelo, marca, direccion, telefono, descripcion } =
-    location.datos;
+    location.datos.vehiculo;
   const { nombre } = location.usuario;
+
+  const [rcmd, setrcmd] = useState({});
 
   const [recomendacion, setRecomendacion] = useState(
     "Generando Recomendación..."
   );
 
+  const disabledDates = [new Date("2021/5/25")];
+
+  function isSameDay(a, b) {
+    return differenceInCalendarDays(a, b) === 0;
+  }
+  function tileDisabled({ date, view }) {
+    // Disable tiles in month view only
+    console.log(view);
+    if (view === "month") {
+      console.log(date);
+      // Check if a date React-Calendar wants to check is on the list of disabled dates
+      return disabledDates.find((dDate) => isSameDay(dDate, date));
+    }
+  }
   const history = useHistory();
   var routesFinal = [];
   React.useEffect(() => {
@@ -174,18 +274,62 @@ function Recomendacion() {
   }, []);
 
   React.useEffect(() => {
+    componentDidMount();
+  }, []);
+
+  async function componentDidMount() {
     var sintomasArray = { array: location.array };
+
     try {
-      const recomendacion = axios.post(
+      const recomendacionResponse = await axios.post(
         "https://stormy-inlet-62110.herokuapp.com/sendSymptom",
         sintomasArray
       );
-      recomendacion.then((obj) => setRecomendacion(obj.data.recomendacion));
-    } catch (error) {
-      console.log(error.response);
-    }
-  }, []);
 
+      setRecomendacion(recomendacionResponse.data.recomendacion);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  React.useEffect(() => {
+    console.log("fuera");
+    if (recomendacion != "Generando Recomendación...") {
+      console.log("dentro");
+      registrarSintoma();
+    }
+  }, [recomendacion]);
+
+  async function registrarSintoma() {
+    var request = location.datos;
+
+    if (recomendacion == "Mantenimiento general") {
+      rcmd.id = "mant123";
+      rcmd.codigo = 1;
+      rcmd.recomendacion = "Mantenimiento general";
+    } else if (recomendacion == "Cambio de pastillas de freno") {
+      rcmd.id = "cambpas123";
+      rcmd.codigo = 2;
+      rcmd.recomendacion = "Cambio de pastillas de freno";
+    } else if (recomendacion == "Cambio de aceite") {
+      rcmd.id = "aceit234";
+      rcmd.codigo = 3;
+      rcmd.recomendacion = "Cambio de aceite";
+    } else if (recomendacion == "Cambio de filtro de aire") {
+      rcmd.id = "aire225";
+      rcmd.codigo = 4;
+      rcmd.recomendacion = "Cambio de filtro de aire";
+    }
+
+    request.recomendacion = rcmd;
+
+    console.log(request);
+
+    const reigsotrSintoma = await axios.post(
+      "http://localhost:8080/api/vehiculo/registrarsintoma",
+      request
+    );
+  }
   const mainPanelRef = React.useRef(null);
   const [sidebarOpened, setsidebarOpened] = React.useState(
     document.documentElement.className.indexOf("nav-open") !== -1
@@ -320,6 +464,7 @@ function Recomendacion() {
                       </Row>
                     </div>
                   </CardBody>
+
                   <CardFooter>
                     <div className="button-container">
                       <Button className="btn-icon btn-round" color="facebook">
@@ -336,6 +481,143 @@ function Recomendacion() {
                 </Card>
               </div>
             </div>
+          </div>
+
+          <div>
+            <Modal
+              isOpen={modal}
+              modalTransition={{ timeout: 300 }}
+              backdropTransition={{ timeout: 1300 }}
+              toggle={toggle}
+              size="xl"
+              style={{
+                position: "absolute",
+                right: "0",
+                top: "5%",
+                left: "5%",
+                width: "40%",
+              }}
+            >
+              <ModalHeader toggle={toggle}>
+                Seleccione y horario y luego la fecha para su cita :
+              </ModalHeader>
+              <ModalBody>
+                <div className="content">
+                  <Row>
+                    <Col md="6">
+                      <Row>
+                        <Calendar
+                          onChange={onChange}
+                          value={value}
+                          tileDisabled={tileDisabled}
+                          minDate={new Date()}
+                        />
+                      </Row>
+                    </Col>
+                    <Col md="6">
+                      <TimePicker
+                        amPmAriaLabel="Select AM/PM"
+                        clearAriaLabel="Clear value"
+                        clockAriaLabel="Toggle clock"
+                        hourAriaLabel="Hour"
+                        maxDetail="second"
+                        isOpen={true}
+                        minuteAriaLabel="Minute"
+                        nativeInputAriaLabel="Time"
+                        onChange={onChangeHour(valueHour)}
+                        secondAriaLabel="Second"
+                        value={valueHour}
+                        amPmAriaLabel="AM/PM"
+                      />
+                    </Col>
+                  </Row>
+                </div>
+                <Modal
+                  isOpen={nestedModal}
+                  toggle={toggleNested}
+                  onClosed={closeAll ? toggle : undefined}
+                >
+                  <ModalHeader>
+                    Seguro que desea de generar la cita? <br />
+                  </ModalHeader>
+
+                  <ModalFooter>
+                    <Container>
+                      <Row hidden={hiddenButton}>
+                        <Col md="6">
+                          <Button
+                            className="btn-fill"
+                            color="primary"
+                            onClick={toggleAll}
+                            style={{ width: "100%" }}
+                          >
+                            Si
+                          </Button>
+                        </Col>
+                        <Col md="6">
+                          <Button
+                            className="btn-fill"
+                            color="seconday"
+                            onClick={toggleNested}
+                            style={{ width: "100%" }}
+                          >
+                            Cambiar fecha y/u hora.
+                          </Button>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col
+                          md="12"
+                          style={{ paddingLeft: "35%", paddingRight: "35%" }}
+                        >
+                          {stateSpinner ? (
+                            <ReactLoading
+                              type="bubbles"
+                              color="black"
+                              width="100px"
+                            />
+                          ) : null}
+                        </Col>
+
+                        <Col md="12">
+                          {stateMensaje ? (
+                            <Alert color="success">
+                              La cita se genero con éxito.
+                            </Alert>
+                          ) : null}
+                        </Col>
+                      </Row>
+                    </Container>
+                  </ModalFooter>
+                </Modal>
+              </ModalBody>
+              <ModalFooter>
+                <Container>
+                  <Row>
+                    <Col md="6">
+                      <Button
+                        className="btn-fill"
+                        color="primary"
+                        onClick={toggleNested}
+                        style={{ width: "100%" }}
+                      >
+                        Generar una cita
+                      </Button>
+                    </Col>
+                    <Col md="6">
+                      <Button
+                        className="btn-fill"
+                        color="secondary"
+                        onClick={toggle}
+                        style={{ width: "100%" }}
+                      >
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
+                </Container>
+              </ModalFooter>
+            </Modal>
           </div>
         </React.Fragment>
       )}

@@ -15,305 +15,146 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
-import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Row,
+  Col,
+  Table,
+  CardTitle,
+} from "reactstrap";
 
-const MapWrapper = () => {
-  const mapRef = React.useRef(null);
-  React.useEffect(() => {
-    let google = window.google;
-    let map = mapRef.current;
-    let lat = "40.748817";
-    let lng = "-73.985428";
-    const myLatlng = new google.maps.LatLng(lat, lng);
-    const mapOptions = {
-      scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
-      styles: [
-        {
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#8ec3b9",
-            },
-          ],
-        },
-        {
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1a3646",
-            },
-          ],
-        },
-        {
-          featureType: "administrative.country",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878",
-            },
-          ],
-        },
-        {
-          featureType: "administrative.land_parcel",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#64779e",
-            },
-          ],
-        },
-        {
-          featureType: "administrative.province",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878",
-            },
-          ],
-        },
-        {
-          featureType: "landscape.man_made",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#334e87",
-            },
-          ],
-        },
-        {
-          featureType: "landscape.natural",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#283d6a",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#6f9ba5",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#3C7680",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#304a7d",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#2c6675",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#9d2a80",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#9d2a80",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#b0d5ce",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be",
-            },
-          ],
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "transit.line",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#283d6a",
-            },
-          ],
-        },
-        {
-          featureType: "transit.station",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#3a4762",
-            },
-          ],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#0e1626",
-            },
-          ],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#4e6d70",
-            },
-          ],
-        },
-      ],
-    };
-
-    map = new google.maps.Map(map, mapOptions);
-
-    const marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
-      animation: google.maps.Animation.DROP,
-      title: "BLK Design System PRO React!",
-    });
-
-    const contentString =
-      '<div class="info-window-content"><h2>BLK Dashboard React</h2>' +
-      "<p>A freebie Admin for ReactStrap, Bootstrap, React, and React Hooks.</p></div>";
-
-    const infowindow = new google.maps.InfoWindow({
-      content: contentString,
-    });
-
-    google.maps.event.addListener(marker, "click", function () {
-      infowindow.open(map, marker);
-    });
-  }, []);
-  return <div ref={mapRef} />;
-};
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "react-modern-calendar-datepicker";
+import axios from "axios";
+import { differenceInCalendarDays } from "date-fns";
 
 function Map() {
+  const [result, setResult] = useState([]);
+  const defaultValue = {
+    year: 0,
+    month: 0,
+    day: 0,
+  };
+
+  const disabledDays = [
+    {
+      year: 2019,
+      month: 3,
+      day: 20,
+    },
+    {
+      year: 2019,
+      month: 3,
+      day: 21,
+    },
+    {
+      year: 2019,
+      month: 3,
+      day: 7,
+    },
+  ];
+
+  const [selectedDay, setSelectedDay] = useState();
+  const [miniumDate, setminiumDate] = useState();
+
+  const handleDisabledSelect = (disabledDay) => {
+    console.log("Tried selecting a disabled day", disabledDay);
+  };
+
+  useEffect(() => {
+    obtenerCitasCliete();
+    var date = new Date();
+
+    defaultValue.year = date.getFullYear();
+    defaultValue.month = date.getMonth() + 1;
+    defaultValue.day = date.getDate();
+    setminiumDate(defaultValue);
+    setSelectedDay(defaultValue);
+  }, []);
+
+  async function obtenerCitasCliete() {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    console.log(usuario.usuario);
+    try {
+      const citasResponse = await axios.get(
+        "http://localhost:8080/api/citas/obtenercitas"
+      );
+
+      setResult(citasResponse.data);
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <div className="content">
         <Row>
           <Col md="12">
-            <Card className="card-plain">
-              <CardHeader>Google Maps</CardHeader>
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">CALENDARIO</CardTitle>
+              </CardHeader>
               <CardBody>
-                <div
-                  id="map"
-                  className="map"
-                  style={{ position: "relative", overflow: "hidden" }}
-                >
-                  <MapWrapper />
-                </div>
+                {" "}
+                <Calendar
+                  minimumDate={miniumDate}
+                  value={selectedDay}
+                  onChange={setSelectedDay}
+                  disabledDays={disabledDays} // here we pass them
+                  onDisabledDayError={handleDisabledSelect} // handle error
+                  locale="en"
+                  shouldHighlightWeekends
+                />
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md="12">
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">CITAS REGISTRADAS</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <Table className="tablesorter" responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>CLIENTE</th>
+                      <th>PLACA</th>
+                      <th>MARCA</th>
+                      <th>MODELO</th>
+                      <th>SERVICIO</th>
+                      <th>FECHA Y HORA</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.map((obj, index) => {
+                      return (
+                        <tr key={obj.id}>
+                          <td>
+                            {obj.usuario.nombre} {obj.usuario.apellidos}
+                          </td>
+                          <td>{obj.vehiculo.placa}</td>
+                          <td>{obj.vehiculo.marca}</td>
+                          <td>{obj.vehiculo.modelo}</td>
+                          <td>{obj.recomendacion.recomendacion}</td>
+                          <td>
+                            {obj.fecha} {obj.hora}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
               </CardBody>
             </Card>
           </Col>
