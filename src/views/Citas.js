@@ -32,7 +32,9 @@ function Citas() {
     console.log(usuario.usuario);
     try {
       const recomendacionResponse = await axios.get(
-        "http://localhost:8080/api/citas/" + usuario.usuario.id + "/true"
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/" +
+          usuario.usuario.id +
+          "/true"
       );
 
       setResult(recomendacionResponse.data);
@@ -56,7 +58,22 @@ function Citas() {
                     <CardSubtitle tag="h4" className="mb-2 text-muted">
                       {obj.recomendacion.recomendacion}
                     </CardSubtitle>
-                    <img src={cambioAceite} style={{}} alt="Logo" />
+
+                    {obj.recomendacion.recomendacion ==
+                    "Mantenimiento general" ? (
+                      <img src={mantenimientoGeneral} style={{}} alt="Logo" />
+                    ) : null}
+                    {obj.recomendacion.recomendacion ==
+                    "Cambio de pastillas de freno" ? (
+                      <img src={cambioPastillasFreno} style={{}} alt="Logo" />
+                    ) : null}
+                    {obj.recomendacion.recomendacion == "Cambio de aceite" ? (
+                      <img src={cambioAceite} style={{}} alt="Logo" />
+                    ) : null}
+                    {obj.recomendacion.recomendacion ==
+                    "Cambio de filtro de aire" ? (
+                      <img src={cambioFiltroAire} style={{}} alt="Logo" />
+                    ) : null}
                   </Col>
                   <Col md="7" style={{ paddingTop: "5%" }}>
                     <Badge color="secondary" style={{ fontSize: "20px" }}>

@@ -79,10 +79,7 @@ const Register = () => {
         console.log(userCreate.data);
 
         if (userCreate.data.status == "201") {
-          localStorage.setItem(
-            "usuario",
-            JSON.stringify(userCreate.data.usuario)
-          );
+          localStorage.setItem("usuario", JSON.stringify(userCreate.data));
           history.push({
             pathname: "/cliente/formulario",
           });

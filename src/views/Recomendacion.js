@@ -7,8 +7,8 @@ import mantenimientoGeneral from "../assets/img/Mantenimiento General.png";
 import cambioAceite from "../assets/img/Cambio de aceite.png";
 
 import TimePicker from "react-time-picker";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "react-modern-calendar-datepicker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 import axios from "axios";
@@ -49,7 +49,6 @@ var ps;
 function Recomendacion() {
   const location = useLocation();
 
-  const [value, onChange] = useState(new Date());
   const [valueHour, onChangeHour] = useState(new Date());
 
   const [modal, setModal] = useState(false);
@@ -63,6 +62,16 @@ function Recomendacion() {
     setModal(!modal);
   };
 
+  const defaultValue = {
+    year: 0,
+    month: 0,
+    day: 0,
+  };
+
+  const [selectedDay, setSelectedDay] = useState();
+  const [miniumDate, setminiumDate] = useState();
+  const [disabledDays, setdisabledDays] = useState([]);
+
   const toggleNested = () => {
     setNestedModal(!nestedModal);
     setCloseAll(false);
@@ -75,8 +84,9 @@ function Recomendacion() {
 
     registrarCitaRequest.usuario = location.usuario;
     registrarCitaRequest.recomendacion = rcmd;
-    registrarCitaRequest.fecha = value.toLocaleDateString();
-    registrarCitaRequest.hora = valueHour.toLocaleTimeString();
+    registrarCitaRequest.fecha =
+      selectedDay.day + "/" + selectedDay.month + "/" + selectedDay.year;
+    registrarCitaRequest.hora = valueHour;
     registrarCitaRequest.lista_sintomas = location.datos.lista_sitomas;
     registrarCitaRequest.vehiculo = location.datos.vehiculo;
     registrarCitaRequest.estado = true;
@@ -84,7 +94,7 @@ function Recomendacion() {
 
     try {
       const recomendacionResponse = await axios.post(
-        "http://localhost:8080/api/citas/registrarcita",
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/registrarcita",
         registrarCitaRequest
       );
 
@@ -95,6 +105,12 @@ function Recomendacion() {
         console.log(recomendacionResponse.data);
         setNestedModal(!nestedModal);
         setCloseAll(true);
+
+        setTimeout(() => {
+          history.push({
+            pathname: "/cliente/citas",
+          });
+        }, 1000);
       }, 1500);
     } catch (error) {
       console.log(error);
@@ -273,7 +289,27 @@ function Recomendacion() {
     }
   }, []);
 
+  async function obtenerCitasDisables() {
+    try {
+      const citasDisables = await axios.get(
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/fechasactdeact"
+      );
+
+      setdisabledDays(citasDisables.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   React.useEffect(() => {
+    var date = new Date();
+
+    defaultValue.year = date.getFullYear();
+    defaultValue.month = date.getMonth() + 1;
+    defaultValue.day = date.getDate();
+    setminiumDate(defaultValue);
+    setSelectedDay(defaultValue);
+    obtenerCitasDisables();
     componentDidMount();
   }, []);
 
@@ -326,7 +362,7 @@ function Recomendacion() {
     console.log(request);
 
     const reigsotrSintoma = await axios.post(
-      "http://localhost:8080/api/vehiculo/registrarsintoma",
+      "https://api-rest-machinne-vehiculos.herokuapp.com/api/vehiculo/registrarsintoma",
       request
     );
   }
@@ -507,10 +543,11 @@ function Recomendacion() {
                     <Col md="6">
                       <Row>
                         <Calendar
-                          onChange={onChange}
-                          value={value}
-                          tileDisabled={tileDisabled}
-                          minDate={new Date()}
+                          minimumDate={miniumDate}
+                          value={selectedDay}
+                          onChange={setSelectedDay}
+                          disabledDays={disabledDays} // here we pass them
+                          shouldHighlightWeekends
                         />
                       </Row>
                     </Col>
@@ -524,7 +561,7 @@ function Recomendacion() {
                         isOpen={true}
                         minuteAriaLabel="Minute"
                         nativeInputAriaLabel="Time"
-                        onChange={onChangeHour(valueHour)}
+                        onChange={onChangeHour}
                         secondAriaLabel="Second"
                         value={valueHour}
                         amPmAriaLabel="AM/PM"

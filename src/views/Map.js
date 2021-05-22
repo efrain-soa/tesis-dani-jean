@@ -22,12 +22,19 @@ import {
   Card,
   CardHeader,
   CardBody,
+  Button,
+  Modal,
+  ModalHeader,
+  Container,
+  ModalBody,
+  ModalFooter,
   Row,
   Col,
   Table,
   CardTitle,
 } from "reactstrap";
 
+import logoEmpresa from "../assets/img/logo-empresa.png";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
 import axios from "axios";
@@ -41,33 +48,40 @@ function Map() {
     day: 0,
   };
 
-  const disabledDays = [
-    {
-      year: 2019,
-      month: 3,
-      day: 20,
-    },
-    {
-      year: 2019,
-      month: 3,
-      day: 21,
-    },
-    {
-      year: 2019,
-      month: 3,
-      day: 7,
-    },
-  ];
+  const [disabledDays, setdisabledDays] = useState([]);
 
   const [selectedDay, setSelectedDay] = useState();
   const [miniumDate, setminiumDate] = useState();
+  const [manejadorFecha, setManejadorFecha] = useState();
 
   const handleDisabledSelect = (disabledDay) => {
-    console.log("Tried selecting a disabled day", disabledDay);
+    setModal(!modal);
+    setManejadorFecha(disabledDay);
   };
 
+  const onChangeDay = (event) => {
+    setModaldesa(!modaldesa);
+    setManejadorFecha(event);
+  };
+
+  const desactivarDia = () => {
+    desactivarDiaApi(manejadorFecha);
+    setModaldesa(!modaldesa);
+  };
+
+  const activarDia = () => {
+    activarDiaApi(manejadorFecha);
+    setModal(!modal);
+  };
+  const [modal, setModal] = useState(false);
+
+  const toggle = () => setModal(!modal);
+
+  const [modaldesa, setModaldesa] = useState(false);
+
+  const toggledesa = () => setModaldesa(!modaldesa);
+
   useEffect(() => {
-    obtenerCitasCliete();
     var date = new Date();
 
     defaultValue.year = date.getFullYear();
@@ -75,14 +89,56 @@ function Map() {
     defaultValue.day = date.getDate();
     setminiumDate(defaultValue);
     setSelectedDay(defaultValue);
+
+    obtenerCitasDisables();
+    obtenerCitasCliete();
   }, []);
+
+  async function obtenerCitasDisables() {
+    try {
+      const citasDisables = await axios.get(
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/fechasactdeact"
+      );
+
+      setdisabledDays(citasDisables.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function activarDiaApi(activ) {
+    console.log(activ);
+    try {
+      const citasActive = await axios.post(
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/activarDia",
+        activ
+      );
+
+      obtenerCitasDisables();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function desactivarDiaApi(desac) {
+    try {
+      const citasDisables = await axios.post(
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/desactivarDia",
+        desac
+      );
+
+      setdisabledDays([...disabledDays, desac]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function obtenerCitasCliete() {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     console.log(usuario.usuario);
     try {
       const citasResponse = await axios.get(
-        "http://localhost:8080/api/citas/obtenercitas"
+        "https://api-rest-machinne-citas.herokuapp.com/api/citas/obtenercitas"
       );
 
       setResult(citasResponse.data);
@@ -97,7 +153,7 @@ function Map() {
     <>
       <div className="content">
         <Row>
-          <Col md="12">
+          <Col md="5">
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">CALENDARIO</CardTitle>
@@ -107,12 +163,21 @@ function Map() {
                 <Calendar
                   minimumDate={miniumDate}
                   value={selectedDay}
-                  onChange={setSelectedDay}
+                  onChange={onChangeDay}
                   disabledDays={disabledDays} // here we pass them
                   onDisabledDayError={handleDisabledSelect} // handle error
-                  locale="en"
                   shouldHighlightWeekends
                 />
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="7">
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4"></CardTitle>
+              </CardHeader>
+              <CardBody>
+                <img src={logoEmpresa} style={{}} alt="Logo" />
               </CardBody>
             </Card>
           </Col>
@@ -159,6 +224,71 @@ function Map() {
             </Card>
           </Col>
         </Row>
+      </div>
+      <div>
+        <Modal isOpen={modal} toggle={toggle}>
+          <ModalHeader toggle={toggle}>
+            Se encuentra a punto de activar el dia seleccionado
+          </ModalHeader>
+          <ModalBody></ModalBody>
+          <ModalFooter>
+            <Container>
+              <Row>
+                <Col md="6">
+                  <Button
+                    className="btn-fill"
+                    color="primary"
+                    style={{ width: "100%" }}
+                    onClick={activarDia}
+                  >
+                    Activar dia
+                  </Button>
+                </Col>
+                <Col md="6">
+                  <Button
+                    className="btn-fill"
+                    color="secondary"
+                    onClick={toggle}
+                    style={{ width: "100%" }}
+                  >
+                    Cancelar
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </ModalFooter>
+        </Modal>
+
+        <Modal isOpen={modaldesa} toggle={toggledesa}>
+          <ModalHeader toggle={toggledesa}>Fechas de atención</ModalHeader>
+          <ModalBody></ModalBody>
+          <ModalFooter>
+            <Container>
+              <Row>
+                <Col md="6">
+                  <Button
+                    className="btn-fill"
+                    color="primary"
+                    style={{ width: "100%" }}
+                    onClick={desactivarDia}
+                  >
+                    Desactivar día
+                  </Button>
+                </Col>
+                <Col md="6">
+                  <Button
+                    className="btn-fill"
+                    color="secondary"
+                    onClick={toggledesa}
+                    style={{ width: "100%" }}
+                  >
+                    Cancelar
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </ModalFooter>
+        </Modal>
       </div>
     </>
   );
