@@ -37,6 +37,7 @@ import {
 import logoEmpresa from "../assets/img/logo-empresa.png";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
+import "./citas.css";
 import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
 
@@ -153,12 +154,12 @@ function Map() {
     <>
       <div className="content">
         <Row>
-          <Col md="5">
+          <Col md="7">
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">CALENDARIO</CardTitle>
               </CardHeader>
-              <CardBody>
+              <CardBody style={{ textAlign: "center" }}>
                 {" "}
                 <Calendar
                   minimumDate={miniumDate}
@@ -167,17 +168,18 @@ function Map() {
                   disabledDays={disabledDays} // here we pass them
                   onDisabledDayError={handleDisabledSelect} // handle error
                   shouldHighlightWeekends
+                  calendarClassName="myCustomCalendar"
                 />
               </CardBody>
             </Card>
           </Col>
-          <Col md="7">
+          <Col md="5">
             <Card>
               <CardHeader>
                 <CardTitle tag="h4"></CardTitle>
               </CardHeader>
               <CardBody>
-                <img src={logoEmpresa} style={{}} alt="Logo" />
+                <img src={logoEmpresa} style={{ width: "50%" }} alt="Logo" />
               </CardBody>
             </Card>
           </Col>

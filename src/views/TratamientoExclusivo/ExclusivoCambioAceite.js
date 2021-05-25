@@ -25,7 +25,7 @@ function ExclusivoCambioAceite(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle precio
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 Cantidad de aceite: 4/4 de aceite <br />
                 Tipo de aceite:
                 {prop.fullSintetico == 1
@@ -47,7 +47,7 @@ function ExclusivoCambioAceite(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 {" "}
                 Cantidad de aceite: 5/4 de aceite <br />
                 Tipo de aceite:

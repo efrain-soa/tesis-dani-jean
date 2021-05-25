@@ -20,12 +20,12 @@ function ExclusivoMantenimientoGeneral(prop) {
       {prop.tipoVehiculo == "AUTO" ? (
         <div>
           <Card>
-            <CardBody style={{ fontSize: "16px" }}>
+            <CardBody style={{ fontSize: "16px", color: "white" }}>
               <CardTitle tag="h3"> </CardTitle>
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle precio AUTO
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 Cambio de aceite : <br />- Cantidad de aceite: 4/4 de aceite -
                 Tipo de aceite:{" "}
                 {prop.fullSintetico == 1 ? "Semi sentitico" : "Full sintetico"}
@@ -63,7 +63,7 @@ function ExclusivoMantenimientoGeneral(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio CAMIONETA
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 Cambio de aceite : <br />
                 - Cantidad de aceite: 5/4 de aceite <br />- Tipo de aceite:{" "}
                 {prop.fullSintetico == 1

@@ -94,9 +94,7 @@ function Citas() {
           width: "40%",
         }}
       >
-        <ModalHeader toggle={toggleClouse}>
-          Seleccione y horario y luego la fecha para su cita :
-        </ModalHeader>
+        <ModalHeader toggle={toggleClouse}>Información adicional</ModalHeader>
         <ModalBody>
           <div className="content">
             <Row style={{ color: "white" }}>

@@ -25,7 +25,7 @@ function ExclusivoCambioFiltroAire(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio
               </CardSubtitle>
-              <CardText>Precio : 40 soles</CardText>
+              <CardText style={{ color: "white" }}>Precio : 40 soles</CardText>
             </CardBody>
           </Card>
         </div>
@@ -39,7 +39,7 @@ function ExclusivoCambioFiltroAire(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio
               </CardSubtitle>
-              <CardText>Precio : 40 soles</CardText>
+              <CardText style={{ color: "white" }}>Precio : 40 soles</CardText>
             </CardBody>
           </Card>
         </div>

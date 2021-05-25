@@ -25,7 +25,7 @@ function ExclusivoPastillasFreno(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 Cambio de pastillas: Delanteras <br />
                 Adicionales: <br />
                 - Mantenimiento de tambor trazero. <br />
@@ -46,7 +46,7 @@ function ExclusivoPastillasFreno(prop) {
               <CardSubtitle tag="h6" className="mb-2 text-muted">
                 Detalle de precio
               </CardSubtitle>
-              <CardText>
+              <CardText style={{ color: "white" }}>
                 Cambio de pastillas: Delanteras y Trazeras (4 ruedas) <br />
                 Adicionales: Ajustes de frenos
                 <br />

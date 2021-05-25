@@ -75,7 +75,7 @@ const Register = () => {
 
       try {
         const userCreate = await axios.post(
-          "http://api-rest-machine-usuarios.herokuapp.com/api/usuarios/crear",
+          "https://api-rest-machine-usuarios.herokuapp.com/api/usuarios/crear",
           newuser
         );
 
