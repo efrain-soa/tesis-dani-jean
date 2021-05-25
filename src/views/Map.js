@@ -154,7 +154,7 @@ function Map() {
     <>
       <div className="content">
         <Row>
-          <Col md="7">
+          <Col md="12">
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">CALENDARIO</CardTitle>
@@ -170,16 +170,6 @@ function Map() {
                   shouldHighlightWeekends
                   calendarClassName="myCustomCalendar"
                 />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md="5">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4"></CardTitle>
-              </CardHeader>
-              <CardBody>
-                <img src={logoEmpresa} style={{ width: "50%" }} alt="Logo" />
               </CardBody>
             </Card>
           </Col>
