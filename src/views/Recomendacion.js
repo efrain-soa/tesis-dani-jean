@@ -22,6 +22,11 @@ import { differenceInCalendarDays } from "date-fns";
 
 import Sidebar from "components/Sidebar/Sidebar.js";
 
+import ExclusivoPastillasFreno from "../views/TratamientoExclusivo/ExclusivoPastillasFreno";
+import ExclusivoMantenimientoGeneral from "../views/TratamientoExclusivo/ExclusivoMantenimientoGeneral";
+import ExclusivoCambioFiltroAire from "../views/TratamientoExclusivo/ExclusivoCambioFiltroAire";
+import ExclusivoCambioAceite from "../views/TratamientoExclusivo/ExclusivoCambioAceite";
+
 import routes from "routescli.js";
 import {
   Modal,
@@ -90,6 +95,7 @@ function Recomendacion() {
     registrarCitaRequest.lista_sintomas = location.datos.lista_sitomas;
     registrarCitaRequest.vehiculo = location.datos.vehiculo;
     registrarCitaRequest.estado = true;
+    registrarCitaRequest.tipoVehiculo = location.tipoVehiculo;
     console.log(registrarCitaRequest);
 
     try {
@@ -250,6 +256,7 @@ function Recomendacion() {
   const { placa, modelo, marca, direccion, telefono, descripcion } =
     location.datos.vehiculo;
   const { nombre } = location.usuario;
+  const [tipoVehiculo, setTipoVehiculo] = useState("");
 
   const [rcmd, setrcmd] = useState({});
 
@@ -492,6 +499,37 @@ function Recomendacion() {
                           <Row>
                             <Col md="5">Recomendacion : </Col>
                             <Col md="7">{recomendacion}</Col>
+                          </Row>
+                          <Row>
+                            <Col md="12">
+                              {recomendacion == "Cambio de filtro de aire" ? (
+                                <ExclusivoCambioFiltroAire
+                                  tipoVehiculo={location.tipoVehiculo}
+                                ></ExclusivoCambioFiltroAire>
+                              ) : null}
+
+                              {recomendacion ==
+                              "Cambio de pastillas de freno" ? (
+                                <ExclusivoPastillasFreno
+                                  tipoVehiculo={location.tipoVehiculo}
+                                ></ExclusivoPastillasFreno>
+                              ) : null}
+                              {console.log(location.tipoVehiculo)}
+                              {console.log(location.array[10])}
+                              {recomendacion == "Cambio de aceite" ? (
+                                <ExclusivoCambioAceite
+                                  tipoVehiculo={location.tipoVehiculo}
+                                  fullSintetico={location.array[10]}
+                                ></ExclusivoCambioAceite>
+                              ) : null}
+
+                              {recomendacion == "Mantenimiento general" ? (
+                                <ExclusivoMantenimientoGeneral
+                                  tipoVehiculo={location.tipoVehiculo}
+                                  fullSintetico={location.array[10]}
+                                ></ExclusivoMantenimientoGeneral>
+                              ) : null}
+                            </Col>
                           </Row>
                         </Col>
                         <Col nd="7">

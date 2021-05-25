@@ -15,10 +15,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
+import axios from "axios";
 import { Line, Bar } from "react-chartjs-2";
 import Test from "./Test";
 // reactstrap components
@@ -43,19 +44,15 @@ import {
 } from "reactstrap";
 
 // core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample4,
-} from "variables/charts.js";
+import { chartExample4 } from "variables/charts.js";
 
 function Dashboard(props) {
-  const [dataChart3, setDataChart3] = useState([53, 20, 10, 80]);
-  const [bigChartData, setbigChartData] = React.useState("data1");
+  const [dataChart3, setDataChart3] = useState([]);
+  const [labelsChart3, setLabelsChart3] = useState([]);
+  const [bigChartData, setbigChartData] = React.useState("grafico1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
-  console.log(sessionStorage.getItem("usuario"));
 
   let chartExample3 = {
     data: (canvas) => {
@@ -68,15 +65,10 @@ function Dashboard(props) {
       gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
 
       return {
-        labels: [
-          "Mantenimiento general",
-          "Cambio de pastillas de freno",
-          "Cambio de aceite",
-          "Cambio de filtro de aire",
-        ],
+        labels: labelsChart3,
         datasets: [
           {
-            label: "Countries",
+            label: "Cantidad",
             fill: true,
             backgroundColor: gradientStroke,
             hoverBackgroundColor: gradientStroke,
@@ -115,7 +107,7 @@ function Dashboard(props) {
             },
             ticks: {
               suggestedMin: 60,
-              suggestedMax: 120,
+              suggestedMax: 20,
               padding: 20,
               fontColor: "#9e9e9e",
             },
@@ -138,6 +130,22 @@ function Dashboard(props) {
     },
   };
 
+  async function dashboard_chart3() {
+    try {
+      const reponseDashboard3 = await axios.get(
+        "https://api-rest-machinne-dashboards.herokuapp.com/api/dashboards/chart1"
+      );
+      setLabelsChart3(reponseDashboard3.data.labels);
+      setDataChart3(reponseDashboard3.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    dashboard_chart3();
+  }, []);
+
   return (
     <>
       <div className="content">
@@ -148,66 +156,11 @@ function Dashboard(props) {
                 <Row>
                   <Col className="text-left" sm="6">
                     <h5 className="card-category">Total Shipments</h5>
-                    <CardTitle tag="h2">Performance</CardTitle>
+                    <CardTitle tag="h3">
+                      Cantidad de sintomas registrados a partir de las citas
+                    </CardTitle>
                   </Col>
-                  <Col sm="6">
-                    <ButtonGroup
-                      className="btn-group-toggle float-right"
-                      data-toggle="buttons"
-                    >
-                      <Button
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data1",
-                        })}
-                        color="info"
-                        id="0"
-                        size="sm"
-                        onClick={() => setBgChartData("data1")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Accounts
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-single-02" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="1"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data2",
-                        })}
-                        onClick={() => setBgChartData("data2")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Purchases
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-gift-2" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="2"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data3",
-                        })}
-                        onClick={() => setBgChartData("data3")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Sessions
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-tap-02" />
-                        </span>
-                      </Button>
-                    </ButtonGroup>
-                  </Col>
+                  <Col sm="6"></Col>
                 </Row>
               </CardHeader>
               <CardBody>
@@ -224,16 +177,13 @@ function Dashboard(props) {
               <CardHeader>
                 <h5 className="card-category">Total Shipments</h5>
                 <CardTitle tag="h4">
-                  <i className="tim-icons icon-bell-55 text-info" /> Sintomas
-                  con atendidos en el mes
+                  <i className="tim-icons icon-bell-55 text-info" /> Top 5
+                  clientes con mas citas
                 </CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
-                  <Line
-                    data={chartExample2.data}
-                    options={chartExample2.options}
-                  />
+                  <Test bigChartData={"grafico2"} />
                 </div>
               </CardBody>
             </Card>
@@ -244,7 +194,7 @@ function Dashboard(props) {
                 <h5 className="card-category">Daily Sales</h5>
                 <CardTitle tag="h4">
                   <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  Cuadro de Servicios Recomendados
+                  Servicios Recomendados a partir de las Citas
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -252,25 +202,6 @@ function Dashboard(props) {
                   <Bar
                     data={chartExample3.data}
                     options={chartExample3.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
-                <CardTitle tag="h4">
-                  <i className="tim-icons icon-send text-success" /> Clientes
-                  atentidos
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
                   />
                 </div>
               </CardBody>

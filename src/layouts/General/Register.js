@@ -46,16 +46,19 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       usernam: Yup.string()
-        .min(8, "Username debe ser minimo 8 caracteres ")
+        .min(5, "Debe ingresar mínimo 5 caracteres")
+        .max(15, "Debe ingresar máximo 15 caracteres")
         .required("Debe ingresar un usuario"),
       password: Yup.string()
-        .min(8, "Password debe ser minimo 8 caracteres.")
+        .min(8, "Debe ingresar mínimo 8 caracteres")
         .required("Debe ingresar un password"),
       nombres: Yup.string()
-        .min(10, "Ingrese un nombre válido")
+        .min(5, "Debe ingresar mínimo 5 caracteres")
+        .max(20, "Debe ingresar máximo 20 caracteres")
         .required("Debe ingresar un nombre"),
       apellidos: Yup.string()
-        .min(10, "Ingrese apellidos válido")
+        .min(5, "Debe ingresar mínimo 5 caracteres")
+        .max(20, "Debe ingresar máximo 20 caracteres")
         .required("Debe ingresar sus apellidos"),
       email: Yup.string()
         .email("Ingrese un formato email válido")

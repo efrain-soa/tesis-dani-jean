@@ -7,10 +7,21 @@ import cambioPastillasFreno from "../assets/img/Cambio de pastillas de freno.png
 import mantenimientoGeneral from "../assets/img/Mantenimiento General.png";
 import cambioAceite from "../assets/img/Cambio de aceite.png";
 
+import ExclusivoPastillasFreno from "../views/TratamientoExclusivo/ExclusivoPastillasFreno";
+import ExclusivoMantenimientoGeneral from "../views/TratamientoExclusivo/ExclusivoMantenimientoGeneral";
+import ExclusivoCambioFiltroAire from "../views/TratamientoExclusivo/ExclusivoCambioFiltroAire";
+import ExclusivoCambioAceite from "../views/TratamientoExclusivo/ExclusivoCambioAceite";
+
 import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Container,
+  ModalFooter,
   Col,
   Row,
   Card,
+  Button,
   CardBody,
   CardImg,
   Badge,
@@ -44,9 +55,81 @@ function Citas() {
     }
   }
 
+  const [cincuentaMil, setCincuentaMil] = useState(0);
+  const [tipoVehiculo, setTipoVehiculo] = useState("");
+  const [recomendaciong, setRecomendaciong] = useState("");
+  const [modal, setModal] = useState(false);
+
+  function toggle(lista_sintomas, recomendacion, tipoVehiculo) {
+    lista_sintomas.map((x, y) => {
+      if (x.sintoma == "mayor a 50,000 kilometros") {
+        setCincuentaMil(1);
+      }
+    });
+    setRecomendaciong(recomendacion);
+    setTipoVehiculo(tipoVehiculo);
+    setModal(!modal);
+  }
+
+  function toggleClouse() {
+    console.log(recomendaciong + tipoVehiculo + cincuentaMil);
+    setModal(!modal);
+  }
+
   return Object.entries(result).length === 0 ? null : (
     <div className="content">
       <h4>Estimado cliente, se muestran todas sus citas generadas.</h4>
+
+      <Modal
+        isOpen={modal}
+        modalTransition={{ timeout: 300 }}
+        backdropTransition={{ timeout: 1300 }}
+        toggle={toggleClouse}
+        size="xl"
+        style={{
+          position: "absolute",
+          right: "0",
+          top: "5%",
+          left: "5%",
+          width: "40%",
+        }}
+      >
+        <ModalHeader toggle={toggleClouse}>
+          Seleccione y horario y luego la fecha para su cita :
+        </ModalHeader>
+        <ModalBody>
+          <div className="content">
+            <Row style={{ color: "white" }}>
+              <Col md="12">
+                {" "}
+                {recomendaciong == "Cambio de filtro de aire" ? (
+                  <ExclusivoCambioFiltroAire
+                    tipoVehiculo={tipoVehiculo}
+                  ></ExclusivoCambioFiltroAire>
+                ) : null}
+                {recomendaciong == "Cambio de pastillas de freno" ? (
+                  <ExclusivoPastillasFreno
+                    tipoVehiculo={tipoVehiculo}
+                  ></ExclusivoPastillasFreno>
+                ) : null}
+                {recomendaciong == "Cambio de aceite" ? (
+                  <ExclusivoCambioAceite
+                    tipoVehiculo={tipoVehiculo}
+                    fullSintetico={cincuentaMil}
+                  ></ExclusivoCambioAceite>
+                ) : null}
+                {recomendaciong == "Mantenimiento general" ? (
+                  <ExclusivoMantenimientoGeneral
+                    tipoVehiculo={tipoVehiculo}
+                    fullSintetico={cincuentaMil}
+                  ></ExclusivoMantenimientoGeneral>
+                ) : null}
+              </Col>
+            </Row>
+          </div>
+        </ModalBody>
+      </Modal>
+
       {result.map((obj, key) => (
         <Row key={key}>
           <Col md="12" style={{ paddingRight: "15%", paddingLeft: "15%" }}>
@@ -121,6 +204,7 @@ function Citas() {
                       Fecha de la cita:
                     </Badge>
                     <ColoredLine color="black" />
+
                     <Row>
                       <Col
                         md="4"
@@ -131,6 +215,23 @@ function Citas() {
                       </Col>
                       <Col md="8" className="text-muted">
                         {obj.fecha} {obj.hora}
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md="12">
+                        <Button
+                          className="btn-fill"
+                          color="primary"
+                          onClick={(e) =>
+                            toggle(
+                              obj.lista_sintomas,
+                              obj.recomendacion.recomendacion,
+                              obj.tipoVehiculo
+                            )
+                          }
+                        >
+                          Ver Detalle
+                        </Button>
                       </Col>
                     </Row>
                   </Col>
