@@ -66,9 +66,7 @@ function ExclusivoMantenimientoGeneral(prop) {
               <CardText style={{ color: "white" }}>
                 Cambio de aceite : <br />
                 - Cantidad de aceite: 5/4 de aceite <br />- Tipo de aceite:{" "}
-                {prop.fullSintetico == 1
-                  ? "Full sintetico "
-                  : "Semi sentitico "}{" "}
+                {prop.fullSintetico == 1 ? "Semi sentitico" : "Full sintetico"}
                 <br />
                 Cambio de pastillas: <br />
                 - Cambio de pastillas: Delanteras y Trazeras (4 ruedas) <br />

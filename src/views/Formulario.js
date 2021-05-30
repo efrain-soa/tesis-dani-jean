@@ -41,6 +41,7 @@ function Formulario() {
       const response = JSON.parse(localStorage.getItem("usuario"));
 
       setUser(response.usuario);
+      componentDidMount();
     } else {
       history.push({
         pathname: "/login",
@@ -694,6 +695,9 @@ function Formulario() {
     },
   ]);
 
+  const [itemsModelo, setItemsModelo] = useState([]);
+  const [itemsModelx, setItemsModelx] = useState([]);
+
   const [arrayModels, setModels] = useState([]);
 
   const toggleDropModelo = () =>
@@ -710,10 +714,37 @@ function Formulario() {
     });
   };
 
+  React.useEffect(() => {
+    componentDidMount2();
+  }, [arrayModels]);
   const onclickModelo = (e) => {
     formik.values.modelo = e;
   };
 
+  function componentDidMount() {
+    let MarcaItems = [];
+    arrayMarca.forEach((obj, index) => {
+      MarcaItems.push(
+        <DropdownItem key={index} onClick={(e) => onclickMarca(obj.marca)}>
+          {obj.marca}
+        </DropdownItem>
+      );
+    });
+    setItemsModelo(MarcaItems);
+  }
+
+  function componentDidMount2() {
+    let ModeloItems = [];
+    console.log(arrayModels);
+    arrayModels.forEach((obj, index) => {
+      ModeloItems.push(
+        <DropdownItem key={index} onClick={(e) => onclickModelo(obj.modelo)}>
+          {obj.modelo}
+        </DropdownItem>
+      );
+    });
+    setItemsModelx(ModeloItems);
+  }
   //const [startDate, setStartDate] = useState(new Date());
   return (
     <>
@@ -765,15 +796,25 @@ function Formulario() {
                       <label></label>
                       <Dropdown isOpen={dropdownOpen} toggle={toggleDrop}>
                         <DropdownToggle>Seleccione</DropdownToggle>
-                        <DropdownMenu>
-                          {arrayMarca.map((prop, key) => (
-                            <DropdownItem
-                              key={key}
-                              onClick={(e) => onclickMarca(prop.marca)}
-                            >
-                              {prop.marca}
-                            </DropdownItem>
-                          ))}
+                        <DropdownMenu
+                          modifiers={{
+                            setMaxHeight: {
+                              enabled: true,
+                              order: 890,
+                              fn: (data) => {
+                                return {
+                                  ...data,
+                                  styles: {
+                                    ...data.styles,
+                                    overflow: "auto",
+                                    maxHeight: 200,
+                                  },
+                                };
+                              },
+                            },
+                          }}
+                        >
+                          {itemsModelo}
                         </DropdownMenu>
                       </Dropdown>
                     </Col>
@@ -797,7 +838,7 @@ function Formulario() {
                     <Col className="pl-md-1" md="2">
                       <label>Modelo</label>
                       <Input
-                        placeholder="Last Name"
+                        placeholder="Modelo"
                         type="text"
                         id="modelo"
                         name="modelo"
@@ -821,15 +862,25 @@ function Formulario() {
                         toggle={toggleDropModelo}
                       >
                         <DropdownToggle>Seleccione</DropdownToggle>
-                        <DropdownMenu>
-                          {arrayModels.map((prop, key) => (
-                            <DropdownItem
-                              key={key}
-                              onClick={(e) => onclickModelo(prop.modelo)}
-                            >
-                              {prop.modelo}
-                            </DropdownItem>
-                          ))}
+                        <DropdownMenu
+                          modifiers={{
+                            setMaxHeight: {
+                              enabled: true,
+                              order: 890,
+                              fn: (data) => {
+                                return {
+                                  ...data,
+                                  styles: {
+                                    ...data.styles,
+                                    overflow: "auto",
+                                    maxHeight: 200,
+                                  },
+                                };
+                              },
+                            },
+                          }}
+                        >
+                          {itemsModelx}
                         </DropdownMenu>
                       </Dropdown>
                     </Col>

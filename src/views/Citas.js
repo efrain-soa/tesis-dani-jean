@@ -212,7 +212,14 @@ function Citas() {
                         Fecha y hora (*)
                       </Col>
                       <Col md="8" className="text-muted">
-                        {obj.fecha} {obj.hora}
+                        {obj.fecha}{" "}
+                        {obj.hora.length > 8
+                          ? new Date(obj.hora).getHours() +
+                            ":" +
+                            new Date(obj.hora).getMinutes() +
+                            ":" +
+                            new Date(obj.hora).getSeconds()
+                          : obj.hora}
                       </Col>
                     </Row>
                     <Row>

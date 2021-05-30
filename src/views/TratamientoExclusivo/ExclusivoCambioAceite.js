@@ -28,9 +28,7 @@ function ExclusivoCambioAceite(prop) {
               <CardText style={{ color: "white" }}>
                 Cantidad de aceite: 4/4 de aceite <br />
                 Tipo de aceite:
-                {prop.fullSintetico == 1
-                  ? "Full sintetico "
-                  : "Semi sentitico "}
+                {prop.fullSintetico == 1 ? "Semi sentitico" : "Full sintetico"}
                 <br />
                 Precio: S/ 350.00
               </CardText>
@@ -51,9 +49,7 @@ function ExclusivoCambioAceite(prop) {
                 {" "}
                 Cantidad de aceite: 5/4 de aceite <br />
                 Tipo de aceite:
-                {prop.fullSintetico == 1
-                  ? "Full sintetico "
-                  : "Semi sentitico "}
+                {prop.fullSintetico == 1 ? "Semi sentitico" : "Full sintetico"}
                 <br />
                 Precio: S/ 400.00
               </CardText>

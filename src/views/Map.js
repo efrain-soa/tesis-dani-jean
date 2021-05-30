@@ -205,7 +205,14 @@ function Map() {
                           <td>{obj.vehiculo.modelo}</td>
                           <td>{obj.recomendacion.recomendacion}</td>
                           <td>
-                            {obj.fecha} {obj.hora}
+                            {obj.fecha}{" "}
+                            {obj.hora.length > 8
+                              ? new Date(obj.hora).getHours() +
+                                ":" +
+                                new Date(obj.hora).getMinutes() +
+                                ":" +
+                                new Date(obj.hora).getSeconds()
+                              : obj.hora}
                           </td>
                         </tr>
                       );

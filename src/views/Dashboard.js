@@ -155,7 +155,6 @@ function Dashboard(props) {
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h5 className="card-category">Total Shipments</h5>
                     <CardTitle tag="h3">
                       Cantidad de sintomas registrados a partir de las citas
                     </CardTitle>
@@ -175,7 +174,6 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Total Shipments</h5>
                 <CardTitle tag="h4">
                   <i className="tim-icons icon-bell-55 text-info" /> Top 5
                   clientes con mas citas
@@ -191,7 +189,6 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Daily Sales</h5>
                 <CardTitle tag="h4">
                   <i className="tim-icons icon-delivery-fast text-primary" />{" "}
                   Servicios Recomendados a partir de las Citas

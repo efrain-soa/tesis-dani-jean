@@ -93,6 +93,12 @@ const Register = () => {
     },
   });
 
+  function back() {
+    history.push({
+      pathname: "/login",
+    });
+  }
+
   return (
     <BackgroundColorContext.Consumer>
       {({ color, changeColor }) => (
@@ -244,6 +250,7 @@ const Register = () => {
                               className="btn-fill"
                               outline
                               color="secondary"
+                              onClick={(e) => back()}
                             >
                               Atrás
                             </Button>

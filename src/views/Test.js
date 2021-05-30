@@ -64,6 +64,7 @@ function Test(props) {
           ticks: {
             suggestedMin: 10,
             suggestedMax: 30,
+
             padding: 20,
             fontColor: "#9a9a9a",
           },
@@ -80,6 +81,7 @@ function Test(props) {
           ticks: {
             padding: 20,
             fontColor: "#9a9a9a",
+            // minRotation: 90,
           },
         },
       ],
@@ -111,9 +113,9 @@ function Test(props) {
             pointBorderColor: "rgba(255,255,255,0)",
             pointHoverBackgroundColor: "#1f8ef1",
             pointBorderWidth: 20,
-            pointHoverRadius: 4,
+            pointHoverRadius: 8,
             pointHoverBorderWidth: 15,
-            pointRadius: 4,
+            pointRadius: 5,
             data: data1,
           },
         ],
