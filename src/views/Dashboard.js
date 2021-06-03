@@ -106,8 +106,8 @@ function Dashboard(props) {
               zeroLineColor: "transparent",
             },
             ticks: {
-              suggestedMin: 60,
-              suggestedMax: 20,
+              suggestedMin: 20,
+              suggestedMax: 40,
               padding: 20,
               fontColor: "#9e9e9e",
             },

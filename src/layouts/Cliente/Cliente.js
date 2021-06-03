@@ -49,12 +49,20 @@ function Cliente() {
       }
     });
     const usuario = JSON.parse(localStorage.getItem("usuario"));
+    console.log(usuario);
 
     if (usuario === null) {
       history.push({
         pathname: "/login",
       });
-    } else {
+
+      return;
+    }
+
+    if (usuario.usuario.rol == "ADMIN") {
+      history.push({
+        pathname: "/admin",
+      });
     }
   }, []);
 

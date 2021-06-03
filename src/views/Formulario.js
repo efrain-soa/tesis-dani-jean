@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import sintomas from "./Sintomas";
 import "react-datepicker/dist/react-datepicker.css";
+import MaskInput from "react-maskinput";
 import {
   Modal,
   ModalHeader,
@@ -57,9 +58,6 @@ function Formulario() {
     }, 1000);
   };
 
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
   // validación y leer los datos del formulario
   const formik = useFormik({
     initialValues: {
@@ -74,13 +72,15 @@ function Formulario() {
     validationSchema: Yup.object({
       marca: Yup.string().required("Debe ingresar una marca"),
       modelo: Yup.string().required("Debe ingresar un modelo"),
-      placa: Yup.string().required("Debe ingresar una placa"),
+      placa: Yup.string()
+        .required("Debe ingresar una placa")
+        .min(7, "Debe ingresar una placa válida"),
       direccion: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
         .max(20, "Debe ingresar máximo 20 caracteres")
         .required("Debe ingresar su dirección"),
       numero: Yup.string()
-
+        .min(9, "Ingrese número válido")
         .max(9, "Ingrese número válido")
         .required("Debe ingresar un número"),
       descripcion: Yup.string()
@@ -704,8 +704,11 @@ function Formulario() {
     setDropdownOpenModelo((prevState) => !prevState);
 
   const [marcaSeleccionada, setMarcaSeleccionada] = useState();
+
   const onclickMarca = (e) => {
+    formik.initialValues.marca = e;
     formik.values.marca = e;
+
     setMarcaSeleccionada(e);
     arrayModelo.map((prop, key) => {
       if (prop.marca == e) {
@@ -718,6 +721,7 @@ function Formulario() {
     componentDidMount2();
   }, [arrayModels]);
   const onclickModelo = (e) => {
+    formik.initialValues.modelo = e;
     formik.values.modelo = e;
   };
 
@@ -735,7 +739,6 @@ function Formulario() {
 
   function componentDidMount2() {
     let ModeloItems = [];
-    console.log(arrayModels);
     arrayModels.forEach((obj, index) => {
       ModeloItems.push(
         <DropdownItem key={index} onClick={(e) => onclickModelo(obj.modelo)}>
@@ -744,6 +747,14 @@ function Formulario() {
       );
     });
     setItemsModelx(ModeloItems);
+  }
+
+  function justNumber(e) {
+    if (!Number(e.target.value)) {
+      return;
+    }
+
+    formik.values.numero = e.target.value;
   }
   //const [startDate, setStartDate] = useState(new Date());
   return (
@@ -781,7 +792,7 @@ function Formulario() {
                         name="marca"
                         disabled
                         style={{ color: "white" }}
-                        value={formik.values.marca}
+                        value={formik.initialValues.marca}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -820,14 +831,21 @@ function Formulario() {
                     </Col>
                     <Col className="pl-md-1" md="4">
                       <label>Placa</label>
+
                       <Input
                         placeholder="Ingrese su número de placa"
                         type="text"
                         id="placa"
                         name="placa"
                         value={formik.values.placa}
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.values.placa = e.target.value;
+                        }}
                         onBlur={formik.handleBlur}
+                        autoComplete="off"
+                        alwaysShowMask
+                        mask="aaa-aaa"
+                        tag={MaskInput}
                       />
                       {formik.touched.placa && formik.errors.placa ? (
                         <div role="alert">
@@ -838,12 +856,12 @@ function Formulario() {
                     <Col className="pl-md-1" md="2">
                       <label>Modelo</label>
                       <Input
-                        placeholder="Modelo"
+                        placeholder="Ingrese Modelo del vehículo"
                         type="text"
                         id="modelo"
                         name="modelo"
                         disabled
-                        value={formik.values.modelo}
+                        value={formik.initialValues.modelo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         style={{ color: "white" }}
@@ -913,6 +931,8 @@ function Formulario() {
                         name="numero"
                         value={formik.values.numero}
                         onChange={formik.handleChange}
+                        type="number"
+                        inputMode="numeric"
                         onBlur={formik.handleBlur}
                         style={{ appearance: "textfield" }}
                       />

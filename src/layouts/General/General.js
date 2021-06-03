@@ -31,6 +31,30 @@ const Login = () => {
     password: "",
   };
 
+  React.useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    if (usuario === null) {
+      return;
+    }
+
+    if (usuario.usuario.rol == "CLIENTE") {
+      history.push({
+        pathname: "/cliente",
+      });
+
+      return;
+    }
+
+    if (usuario.usuario.rol == "ADMIN") {
+      history.push({
+        pathname: "/admin",
+      });
+
+      return;
+    }
+  }, []);
+
   // validación y leer los datos del formulario
   const formik = useFormik({
     initialValues: {

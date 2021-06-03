@@ -20,10 +20,20 @@ function ExclusivoMantenimientoGeneral(prop) {
       {prop.tipoVehiculo == "AUTO" ? (
         <div>
           <Card>
-            <CardBody style={{ fontSize: "16px", color: "white" }}>
+            <CardBody
+              style={{
+                fontSize: "16px",
+                background:
+                  "linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%)",
+              }}
+            >
               <CardTitle tag="h3"> </CardTitle>
-              <CardSubtitle tag="h6" className="mb-2 text-muted">
-                Detalle precio AUTO
+              <CardSubtitle
+                tag="h3"
+                style={{ color: "white" }}
+                className="mb-2 "
+              >
+                Detalle de Tratamiento
               </CardSubtitle>
               <CardText style={{ color: "white" }}>
                 Cambio de aceite : <br />- Cantidad de aceite: 4/4 de aceite -
@@ -58,10 +68,20 @@ function ExclusivoMantenimientoGeneral(prop) {
       {prop.tipoVehiculo == "CAMIONETA" ? (
         <div>
           <Card>
-            <CardBody style={{ fontSize: "16px" }}>
+            <CardBody
+              style={{
+                fontSize: "16px",
+                background:
+                  "linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%)",
+              }}
+            >
               <CardTitle tag="h3"> </CardTitle>
-              <CardSubtitle tag="h6" className="mb-2 text-muted">
-                Detalle de precio CAMIONETA
+              <CardSubtitle
+                tag="h3"
+                style={{ color: "white" }}
+                className="mb-2 "
+              >
+                Detalle de Tratamiento
               </CardSubtitle>
               <CardText style={{ color: "white" }}>
                 Cambio de aceite : <br />

@@ -46,9 +46,18 @@ function Admin() {
   React.useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     console.log(usuario);
+
     if (usuario === null) {
       history.push({
         pathname: "/login",
+      });
+
+      return;
+    }
+
+    if (usuario.usuario.rol == "CLIENTE") {
+      history.push({
+        pathname: "/cliente",
       });
     }
   }, []);

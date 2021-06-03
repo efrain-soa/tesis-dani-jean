@@ -78,8 +78,13 @@ function Recomendacion() {
   const [disabledDays, setdisabledDays] = useState([]);
 
   const toggleNested = () => {
-    setNestedModal(!nestedModal);
-    setCloseAll(false);
+    console.log(valueHour);
+    if (valueHour != null) {
+      setNestedModal(!nestedModal);
+      setCloseAll(false);
+    } else {
+      alert("Seleccione la hora por favor.");
+    }
   };
   const toggleAll = async () => {
     sethiddenButton(true);
@@ -444,15 +449,7 @@ function Recomendacion() {
       {({ color, changeColor }) => (
         <React.Fragment>
           <div className="wrapper">
-            <Sidebar
-              routes={routes}
-              logo={{
-                outterLink: "https://www.creative-tim.com/",
-                text: "Creative Tim",
-                imgSrc: logo,
-              }}
-              toggleSidebar={toggleSidebar}
-            />
+            <Sidebar routes={routes} toggleSidebar={toggleSidebar} />
             <div className="main-panel" ref={mainPanelRef} data={color}>
               <AdminNavbar
                 brandText={getBrandText(location.pathname)}
