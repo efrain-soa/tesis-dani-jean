@@ -73,8 +73,15 @@ function Formulario() {
       marca: Yup.string().required("Debe ingresar una marca"),
       modelo: Yup.string().required("Debe ingresar un modelo"),
       placa: Yup.string()
-        .required("Debe ingresar una placa")
-        .min(7, "Debe ingresar una placa válida"),
+        .min(7, "Debe ingresar una placa válida (Formato :XXX-XXX)")
+        .max(7, "Debe ingresar una placa válida (Formato :XXX-XXX)")
+        .trim()
+        .matches(
+          /^[-1234567890A-Za-z]+$/,
+          "Debe ingresar una placa válida (Formato :XXX-XXX)"
+        )
+        .required("Debe ingresar una placa"),
+
       direccion: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
         .max(20, "Debe ingresar máximo 20 caracteres")
@@ -82,6 +89,10 @@ function Formulario() {
       numero: Yup.string()
         .min(9, "Ingrese número válido")
         .max(9, "Ingrese número válido")
+        .matches(
+          /^[1234567890]+$/,
+          "Debe ingresar un formato de celular válido (Formato: 987654321)"
+        )
         .required("Debe ingresar un número"),
       descripcion: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
@@ -838,14 +849,9 @@ function Formulario() {
                         id="placa"
                         name="placa"
                         value={formik.values.placa}
-                        onChange={(e) => {
-                          formik.values.placa = e.target.value;
-                        }}
+                        onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         autoComplete="off"
-                        alwaysShowMask
-                        mask="aaa-aaa"
-                        tag={MaskInput}
                       />
                       {formik.touched.placa && formik.errors.placa ? (
                         <div role="alert">

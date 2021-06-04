@@ -51,14 +51,19 @@ const Register = () => {
         .required("Debe ingresar un usuario"),
       password: Yup.string()
         .min(8, "Debe ingresar mínimo 8 caracteres")
+        .min(20, "Debe ingresar mínimo 20 caracteres")
         .required("Debe ingresar un password"),
       nombres: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
         .max(20, "Debe ingresar máximo 20 caracteres")
+        .trim()
+        .matches(/^[A-Za-z]+$/, "Debe ingresar un nombre valido")
         .required("Debe ingresar un nombre"),
       apellidos: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
         .max(20, "Debe ingresar máximo 20 caracteres")
+        .trim()
+        .matches(/^[A-Za-z]+$/, "Debe ingresar apellidos válidos")
         .required("Debe ingresar sus apellidos"),
       email: Yup.string()
         .email("Ingrese un formato email válido")
