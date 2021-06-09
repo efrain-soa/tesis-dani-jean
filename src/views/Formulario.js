@@ -66,7 +66,7 @@ function Formulario() {
       placa: "",
       direccion: "",
       numero: "",
-      descripcion: "",
+      kilometraje: "",
       tipoVehiculo: "",
     },
     validationSchema: Yup.object({
@@ -84,7 +84,7 @@ function Formulario() {
 
       direccion: Yup.string()
         .min(5, "Debe ingresar mínimo 5 caracteres")
-        .max(20, "Debe ingresar máximo 20 caracteres")
+        .max(100, "Debe ingresar máximo 100 caracteres")
         .required("Debe ingresar su dirección"),
       numero: Yup.string()
         .min(9, "Ingrese número válido")
@@ -94,9 +94,14 @@ function Formulario() {
           "Debe ingresar un formato de celular válido (Formato: 987654321)"
         )
         .required("Debe ingresar un número"),
-      descripcion: Yup.string()
-        .min(5, "Debe ingresar mínimo 5 caracteres")
-        .max(100, "Debe ingresar máximo 100 caracteres"),
+      kilometraje: Yup.string()
+        .min(1, "Debe ingresar mínimo 1 dígito")
+        .max(6, "Debe ingresar máximo 6 dígitos")
+        .matches(
+          /^[1234567890]+$/,
+          "Debe ingresar un formato de kilometraje válido (Formato: 5000)"
+        )
+        .required("Debe ingresar el kilometraje del vehículo"),
       tipoVehiculo: Yup.string().required(
         "Debe seleccionar un tipo de vehículo."
       ),
@@ -108,7 +113,7 @@ function Formulario() {
         placa: userform.placa,
         direccion: userform.direccion,
         numero: userform.numero,
-        descripcion: userform.descripcion,
+        kilometraje: userform.kilometraje,
         telefono: userform.telefono,
       };
 
@@ -777,7 +782,7 @@ function Formulario() {
               <Form onSubmit={formik.handleSubmit}>
                 <CardHeader>
                   <h4 className="title">
-                    Ingresa una breve información de tu auto :)
+                    Datos del vehículo
                   </h4>
                 </CardHeader>
                 <CardBody>
@@ -840,25 +845,6 @@ function Formulario() {
                         </DropdownMenu>
                       </Dropdown>
                     </Col>
-                    <Col className="pl-md-1" md="4">
-                      <label>Placa</label>
-
-                      <Input
-                        placeholder="Ingrese su número de placa"
-                        type="text"
-                        id="placa"
-                        name="placa"
-                        value={formik.values.placa}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        autoComplete="off"
-                      />
-                      {formik.touched.placa && formik.errors.placa ? (
-                        <div role="alert">
-                          <p className="text-danger">{formik.errors.placa} </p>
-                        </div>
-                      ) : null}
-                    </Col>
                     <Col className="pl-md-1" md="2">
                       <label>Modelo</label>
                       <Input
@@ -908,6 +894,25 @@ function Formulario() {
                         </DropdownMenu>
                       </Dropdown>
                     </Col>
+                    <Col className="pl-md-1" md="4">
+                      <label>Placa</label>
+
+                      <Input
+                        placeholder="Ingrese su número de placa"
+                        type="text"
+                        id="placa"
+                        name="placa"
+                        value={formik.values.placa}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        autoComplete="off"
+                      />
+                      {formik.touched.placa && formik.errors.placa ? (
+                        <div role="alert">
+                          <p className="text-danger">{formik.errors.placa} </p>
+                        </div>
+                      ) : null}
+                    </Col>
                   </Row>
                   <Row>
                     <Col md="8">
@@ -952,23 +957,23 @@ function Formulario() {
 
                   <Row>
                     <Col md="12">
-                      <label>Breve descripción de su engreido</label>
+                      <label>Kilometraje del vehículo</label>
                       <Input
                         cols="80"
-                        placeholder="Cuéntanos acerca de tu auto ..."
+                        placeholder="Ingrese el kilometraje del vehículo"
                         rows="4"
-                        type="textarea"
-                        id="descripcion"
-                        name="descripcion"
-                        value={formik.values.descripcion}
+                        type="text"
+                        id="kilometraje"
+                        name="kilometraje"
+                        value={formik.values.kilometraje}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.descripcion &&
-                      formik.errors.descripcion ? (
+                      {formik.touched.kilometraje &&
+                        formik.errors.kilometraje ? (
                         <div role="alert">
                           <p className="text-danger">
-                            {formik.errors.descripcion}{" "}
+                            {formik.errors.kilometraje}{" "}
                           </p>
                         </div>
                       ) : null}
@@ -1000,7 +1005,7 @@ function Formulario() {
                         </Label>
                       </FormGroup>
                       {formik.touched.tipoVehiculo &&
-                      formik.errors.tipoVehiculo ? (
+                        formik.errors.tipoVehiculo ? (
                         <div role="alert">
                           <p className="text-danger">
                             {formik.errors.tipoVehiculo}{" "}

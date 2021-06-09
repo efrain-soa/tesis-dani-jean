@@ -23,7 +23,7 @@ import Citas from "views/Citas";
 var routes = [
   {
     path: "/formulario",
-    name: "Formulario",
+    name: "Datos de Vehículo",
     rtlName: "لوحة القيادة",
     icon: "tim-icons icon-chart-pie-36",
     component: Formulario,
@@ -31,7 +31,7 @@ var routes = [
   },
   {
     path: "/citas",
-    name: "Registro de Citas",
+    name: "Programación de Citas",
     rtlName: "الرموز",
     icon: "tim-icons icon-atom",
     component: Citas,
