@@ -258,7 +258,7 @@ function Recomendacion() {
     }
   }
 
-  const { placa, modelo, marca, direccion, telefono, descripcion } =
+  const { placa, modelo, marca, direccion, telefono, kilometraje } =
     location.datos.vehiculo;
   const { nombre } = location.usuario;
   const [tipoVehiculo, setTipoVehiculo] = useState("");
